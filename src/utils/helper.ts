@@ -21,12 +21,23 @@ export const groupTicketsByStatus = (tickets: Ticket[]) => {
 export const groupTicketsByUser = (tickets: Ticket[], users: Record<string, User>) => {
   const groups: Record<string, Ticket[]> = {};
   tickets.forEach(ticket => {
-    const userName = users[ticket.userId]?.name || 'Unassigned';
+    const userName = users[ticket.userId].name;
     if (!groups[userName]) {
       groups[userName] = [];
     }
     groups[userName].push(ticket);
   });
+  return groups;
+};
+export const groupTicketsByUserId = (tickets: Ticket[]) => {
+  const groups: Record<string, Ticket[]> = tickets.reduce((result: Record<string, Ticket[]>, ticket: Ticket) => {
+      if (!result[ticket.userId]) {
+          result[ticket.userId] = [];
+      }
+      result[ticket.userId].push(ticket);
+      return result;
+  }, {});
+
   return groups;
 };
 

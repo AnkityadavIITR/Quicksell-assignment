@@ -1,12 +1,12 @@
 import React,{useEffect,useState} from 'react';
 import './App.css';
 import Navbar from './components/Navbar';
-import { useCallback } from 'react';
 import usePriorityStore from './store/priority';
 import { API_URL} from './utils/constant';
 import { User,Ticket } from './types/default';
-import { groupTicketsByStatus, groupTicketsByUser, groupTicketsByPriority, sortTickets } from './utils/helper';
+import { groupTicketsByStatus, groupTicketsByUser, groupTicketsByPriority, sortTickets,groupTicketsByUserId } from './utils/helper';
 import { TicketCard } from './components/Card';
+import Grid from './components/Grid';
 function App() {
   const [loading, setLoading] = useState(true);
   const { setTickets, setUsers,users,grouping,ordering,tickets } = usePriorityStore();
@@ -14,10 +14,9 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://api.quicksell.co/v1/internal/frontend-assignment');
+        const response = await fetch(API_URL);
         const data = await response.json();
         setTickets(data.tickets);
-        // Convert users array to record
         const usersRecord = data.users.reduce((acc: Record<string, User>, user: User) => {
           acc[user.id] = user;
           return acc;
@@ -42,7 +41,7 @@ function App() {
         groupedTickets = groupTicketsByStatus(tickets);
         break;
       case 'user':
-        groupedTickets = groupTicketsByUser(tickets, users);
+        groupedTickets = groupTicketsByUserId(tickets);
         break;
       case 'priority':
         groupedTickets = groupTicketsByPriority(tickets);
@@ -60,32 +59,15 @@ function App() {
   };
 
   const groupedTickets = getGroupedTickets();
+  console.log("groupedTickets",groupedTickets)
   
-  if(loading){
-    return <div style={{height:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>Loading...</div>
-  }
   return (
     <div className="App">
       <Navbar/>
-      <div className="kanban-board">
-        {Object.entries(groupedTickets).map(([groupName, groupTickets]) => (
-          <div key={groupName} className="ticket-group">
-            <div className="group-header">
-              <h2>{groupName}</h2>
-              <span className="ticket-count">{groupTickets.length}</span>
-            </div>
-            <div className="tickets-container">
-              {groupTickets.map(ticket => (
-                <TicketCard 
-                  key={ticket.id} 
-                  ticket={ticket} 
-                  user={users[ticket.userId]}
-                />
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
+      {
+        loading ? <div style={{height:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>Loading...</div> :
+        <Grid gridData={groupedTickets} />
+      }
     </div>
   );
 }
