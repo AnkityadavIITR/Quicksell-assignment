@@ -5,19 +5,18 @@ import { Ticket, User } from "../types/default";
 export type GroupingOption = 'status' | 'user' | 'priority';
 export type OrderingOption = 'priority' | 'title';
 
-interface Priority {
+interface priority {
+  tickets: Ticket[];
+  users: Record<string, User>;
   grouping: GroupingOption;
   ordering: OrderingOption;
-  tickets: Ticket[];
-  users: User[];
-  setGrouping: (data: GroupingOption) => void;
-  setOrdering: (data: OrderingOption) => void;
-  setTickets: (data: Ticket[]) => void;
-  setUsers: (data: User[]) => void;
+  setTickets: (tickets: Ticket[]) => void;
+  setUsers: (users: Record<string, User>) => void;
+  setGrouping: (grouping: GroupingOption) => void;
+  setOrdering: (ordering: OrderingOption) => void;
 }
-
 // Custom storage implementation
-const customStorage: PersistStorage<Priority> = {
+const customStorage: PersistStorage<priority> = {
   getItem: (name) => {
     const item = localStorage.getItem(name);
     return item ? JSON.parse(item) : null;
@@ -31,17 +30,17 @@ const customStorage: PersistStorage<Priority> = {
 };
 
 // Persist the state in localStorage
-const usePriorityStore = create<Priority>()(
+const usePriorityStore = create<priority>()(
   persist(
     (set) => ({
       grouping: 'status',
       ordering: 'priority',
       tickets: [],
-      users: [],
+      users: {},
       setGrouping: (data) => set(() => ({ grouping: data })),
       setOrdering: (data) => set(() => ({ ordering: data })),
       setTickets: (data) => set(() => ({ tickets: data })),
-      setUsers: (data) => set(() => ({ users: data }))
+      setUsers: (users) => set({ users }),
     }),
     {
       name: "priority-store", // Key for localStorage
@@ -50,5 +49,4 @@ const usePriorityStore = create<Priority>()(
   )
 );
 
-// Export the store hook for use in components
 export default usePriorityStore;

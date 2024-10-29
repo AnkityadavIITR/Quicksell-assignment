@@ -1,34 +1,34 @@
 import React from 'react';
-import './index.css'
-// import UserIcon from '../UserIcon';
-// import { LuMoreHorizontal } from 'react-icons/lu';
 import { Ticket, User } from '../../types/default';
+import './index.css';
+import { PRIORITY_MAP } from '../../utils/helper';
 
-function Card({ ticket, userData, hideStatusIcon, hideProfileIcon }: { ticket: Ticket, userData: User, hideStatusIcon: boolean, hideProfileIcon: boolean }) {
-  return (
-    <div></div>
-    // <div className='card'>
-    //   <div className='top-container'>
-    //     <div className='ticket-id'>{ticket.id}</div>
-    //     {hideProfileIcon ? null : <UserIcon name={userData.name} available={userData.available} />}
-    //   </div>
-    //   <div className='middle-container'>
-    //     {hideStatusIcon ? null : getStatusIcon(ticket.status)}
-    //     <div className='title'>{ticket.title}</div>
-    //   </div>
-    //   <div className='bottom-container'>
-    //     <div className='more-icon-container'>
-    //       <LuMoreHorizontal color="#797d84" />
-    //     </div>
-    //     {ticket.tag.map((t: string) => (
-    //       <div key={t} className='tag-container'>
-    //         <div className='tag-icon'></div>
-    //         <div className='tag-text'>{t}</div>
-    //       </div>
-    //     ))}
-    //   </div>
-    // </div>
-  );
+interface TicketCardProps {
+  ticket: Ticket;
+  user: User;
 }
 
-export default Card;
+export const TicketCard: React.FC<TicketCardProps> = ({ ticket, user }) => {
+  return (
+    <div className="ticket-card">
+      <div className="ticket-header">
+        <span className="ticket-id">{ticket.id}</span>
+        <div className="user-avatar" title={user?.name || 'Unassigned'}>
+          {user?.available && <span className="available-dot" />}
+          {user?.name?.[0] || '?'}
+        </div>
+      </div>
+      <h3 className="ticket-title">{ticket.title}</h3>
+      <div className="ticket-footer">
+        <span className={`priority-tag priority-${ticket.priority}`}>
+          {PRIORITY_MAP[ticket.priority as keyof typeof PRIORITY_MAP]}
+        </span>
+        {ticket.tag.map((tag) => (
+          <span key={tag} className="feature-tag">
+            {tag}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+};
