@@ -3,9 +3,19 @@ import './index.css'
 import UserIcon from '../UserIcon';
 import { NoPriority } from '../../utils/assets';
 import { Ticket, User } from '../../types/default';
-import { getStatusIcon } from '../../utils/assets';
+import { getStatusIcon,getPriorityIcon } from '../../utils/assets';
+import usePriorityStore from '../../store/priority';
+export const ticketPriorities = [
+    "No priority", 
+    "Low",         
+    "Medium",      
+    "High",        
+    "Urgent"     
+  ];
 function Card({ ticket, userData, hideStatusIcon, hideProfileIcon }: { ticket: Ticket, userData: User, hideStatusIcon: boolean, hideProfileIcon: boolean }) {
-  return (
+  const {grouping, ordering} = usePriorityStore();
+
+    return (
     <div className='card'>
       <div className='top-container'>
         <div className='ticket-id'>{ticket.id}</div>
@@ -16,6 +26,11 @@ function Card({ ticket, userData, hideStatusIcon, hideProfileIcon }: { ticket: T
         <div className='title'>{ticket.title}</div>
       </div>
       <div className='bottom-container'>
+        {
+            grouping=='user' && <div className='more-icon-container'>
+              {getPriorityIcon(ticketPriorities[ticket.priority])}          
+            </div>
+        }
         {ticket.tag.map((t: string) => (
           <div key={t} className='tag-container'>
             <div className='tag-icon'></div>
