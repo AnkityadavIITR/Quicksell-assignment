@@ -8,15 +8,23 @@ export const PRIORITY_MAP = {
 };
 
 export const groupTicketsByStatus = (tickets: Ticket[]) => {
-  const groups: Record<string, Ticket[]> = {};
+  const groups: Record<string, Ticket[]> = {
+    "Backlog": [],
+    "Todo": [],
+    "In progress": [],
+    "Done": [],
+    "Canceled": [],
+  };
+
   tickets.forEach(ticket => {
-    if (!groups[ticket.status]) {
-      groups[ticket.status] = [];
+    if (groups[ticket.status]) {
+      groups[ticket.status].push(ticket);
     }
-    groups[ticket.status].push(ticket);
   });
+
   return groups;
 };
+
 
 export const groupTicketsByUser = (tickets: Ticket[], users: Record<string, User>) => {
   const groups: Record<string, Ticket[]> = {};

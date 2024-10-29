@@ -16,9 +16,6 @@ function Card({ ticket, userData, hideStatusIcon, hideProfileIcon }: { ticket: T
         <div className='title'>{ticket.title}</div>
       </div>
       <div className='bottom-container'>
-        <div className='more-icon-container'>
-          <NoPriority />
-        </div>
         {ticket.tag.map((t: string) => (
           <div key={t} className='tag-container'>
             <div className='tag-icon'></div>

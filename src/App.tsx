@@ -5,7 +5,6 @@ import usePriorityStore from './store/priority';
 import { API_URL} from './utils/constant';
 import { User,Ticket } from './types/default';
 import { groupTicketsByStatus, groupTicketsByUser, groupTicketsByPriority, sortTickets,groupTicketsByUserId } from './utils/helper';
-import { TicketCard } from './components/Card';
 import Grid from './components/Grid';
 function App() {
   const [loading, setLoading] = useState(true);

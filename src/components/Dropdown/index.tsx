@@ -11,7 +11,7 @@ function DisplayDropdown() {
   const {setOrdering,setGrouping,grouping,ordering}=usePriorityStore()
 
   const openDropdown = useCallback(() => {
-    setVisible(true);
+    setVisible(prev=>!prev);
   }, [],);
 
   const handleClickOutside = useCallback((event: any) => {
